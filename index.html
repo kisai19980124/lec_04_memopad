@@ -1,0 +1,70 @@
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>myMemoPad</title>
+<script src="js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="css/sample.css">
+</head>
+<body>
+<div class="content wrapper" id="home">
+    <h2 class="page-title">漢字クイズ</h2>
+    <p>漢字クイズを解いてみよう</p>
+    <a class="button" id="start">スタート</a>
+</div>
+
+<div class="content wrapper" id="quiz">
+    <div><span id="countdown">30</span>秒</div>
+    <h2 class="page-title" id="question">問題</h2>
+    <p>この国の名前は？ひらがなで解答してください．</p>
+    <div id="answerarea">
+        <textarea id="answer"></textarea>
+        <a class="button" id="answerbutton">解答</a>
+    </div>
+    <div id="correctanswer"></div>
+</div>
+
+<script>
+var questions = ["亜米利加","英吉利","威爾斯","威士干心","阿海阿"];
+var pronunciation = ["あめりか","いぎりす","うぇーるず","うぃすこんしん","おはいお"]
+var answers=["アメリカ","イギリス","ウェールズ","ウィスコンシン","オハイオ"];
+var numbers=[];
+var counter=0;
+var num = 0;
+function shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+}
+$("#quiz").css("display", "none");
+$("#answerarea").css("display", "none");
+$("#correctanswer").css("display", "none");
+$("#start").click(function(){
+    $("#home").css("display", "none");
+    $("#quiz").css("display", "block");
+    $("#answerarea").css("display", "block");
+    var myVar =setInterval(function(){
+        var num=$("#countdown").text();
+        num--;
+        $("#countdown").text(num);
+        if(num==0){
+            clearInterval(myVar);
+            //終了→集計になる
+        }
+    }, 1000);
+    //漢字クイズ出す
+    ///乱数行列生成
+    numbers=Array.from(Array(questions.length).keys());
+    shuffle(numbers);
+    //console.log(numbers);
+    num=numbers[counter];
+    $("#question").text(questions[num]);
+})
+$("#answerbutton").click(function(){
+    let answerwritten = document.getElementById("answer");
+    console.log(answerwritten.value);
+})
+
+</script>
+</body>
+</html>
