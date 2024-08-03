@@ -22,11 +22,11 @@ img{
 
 .content {
     text-align: center;
-    margin-top: 10%;
+    margin-top: 5%;
 }
 .content p {
     font-size: 1.125rem;
-    margin: 10px 0 42px;
+    margin: 10px 0 10px;
 }
 .page-title {
     font-size: 5rem;
@@ -38,6 +38,7 @@ img{
     color: #fff;
     border-radius: 5px;
     padding: 18px 32px;
+    cursor: pointer;
 }
 .button:hover{
     background: #0090aa;
@@ -63,7 +64,7 @@ p{
     font-size:200%;
     text-align: center;
     border-bottom:1px solid #fff;
-    height:200px;
+    
 }
 ul{
     padding: 0;

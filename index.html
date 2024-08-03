@@ -15,15 +15,29 @@
     <a class="button" id="start">スタート</a>
 </div>
 
-<div class="content wrapper" id="quiz">
+<div class="content wrapper" id="quiz" style="display: none;">
     <div><span id="countdown">30</span>秒</div>
     <h2 class="page-title" id="question">問題</h2>
     <p>この国の名前は？ひらがなで解答してください．</p>
-    <div id="answerarea">
+    <div id="answerarea" >
         <textarea id="answer"></textarea>
-        <a class="button" id="answerbutton">解答</a>
+        <a class="button" id="answerbutton" style="display: block;">解答</a>
+        <a class="button" id="nextquestion" style="display: none;">次の問題</a>
     </div>
-    <div id="correctanswer"></div>
+    <div id="justification">
+        <p id="correct" style="display: none;">正解！答えは</p>
+        <p id="false" style="display: none;">残念！答えは</p>
+        <h2 class="page-title" id="correctanswer"></h2>
+    </div>
+    
+</div>
+
+<div class="content wrapper" id="finish" style="display: none;">
+    <h2 class="page-title" id="question">終了！</h2>
+    <p>あなたの点数は…</p>
+    <h2 class="page-title" id="final_point"></h2>
+    <h2 class="page-title" id="new_record"></h2>
+    <a class="button" id="reset">もう一回</a>
 </div>
 
 <script>
@@ -33,25 +47,63 @@ var answers=["アメリカ","イギリス","ウェールズ","ウィスコンシ
 var numbers=[];
 var counter=0;
 var num = 0;
+var score = 0;
+let timer;
 function shuffle(array) {
     array.sort(() => Math.random() - 0.5);
 }
-$("#quiz").css("display", "none");
-$("#answerarea").css("display", "none");
-$("#correctanswer").css("display", "none");
-$("#start").click(function(){
-    $("#home").css("display", "none");
+
+function finished(){
+    clearInterval(timer);
+    $("#quiz").css("display", "none");
+    $("#finish").css("display", "block");
+    $("#final_point").text(score);
+}
+function reset(){
+    $("#countdown").text(30);
     $("#quiz").css("display", "block");
-    $("#answerarea").css("display", "block");
-    var myVar =setInterval(function(){
-        var num=$("#countdown").text();
-        num--;
-        $("#countdown").text(num);
-        if(num==0){
-            clearInterval(myVar);
+    $("#finish").css("display", "none");
+    $("#correct").css("display", "none");
+    $("#false").css("display", "none");
+    //clearInterval(timer);
+    numbers=[];
+    counter=0;
+    num = 0;
+    score = 0;
+
+}
+var countdown = function () {
+    var sec=$("#countdown").text();
+        sec--;
+        $("#countdown").text(sec);
+        if(sec==0){
             //終了→集計になる
+            
+            finished();
         }
-    }, 1000);
+    
+}
+
+//$("#answerarea").css("display", "none");
+//$("#correctanswer").css("display", "none");
+$("#start").click(function(){//スタートボタン押したら
+    //ホーム→クイズページに
+    $("#home").css("display", "none");
+    $("#finish").css("display", "none");
+    $("#quiz").css("display", "block");
+    timer = setInterval(countdown,1000);//カウントダウン開始
+    /*var myVar =setInterval(function(){//カウントダウン
+        var sec=$("#countdown").text();
+        sec--;
+        $("#countdown").text(sec);
+        if(sec==0){
+            //終了→集計になる
+            clearInterval(myVar);
+            finished();
+            $("#quiz").css("display", "none");
+            $("#finish").css("display", "block");
+        }
+    }, 1000);*/
     //漢字クイズ出す
     ///乱数行列生成
     numbers=Array.from(Array(questions.length).keys());
@@ -63,6 +115,58 @@ $("#start").click(function(){
 $("#answerbutton").click(function(){
     let answerwritten = document.getElementById("answer");
     console.log(answerwritten.value);
+    //解答判定
+    if (answerwritten.value == pronunciation[num]) {
+        //正解
+        score++; 
+        $("#correct").css("display", "block");
+    } else {
+        $("#false").css("display", "block");
+        
+    }
+    $("#correctanswer").css("display", "block");
+    $("#correctanswer").text(answers[num]);
+    $("#answerbutton").css("display", "none");
+    $("#nextquestion").css("display", "block");
+
+})
+$("#nextquestion").click(function(){
+    let answerwritten = document.getElementById("answer");
+    $("#correct").css("display", "none");
+    $("#false").css("display", "none");
+    $("#correctanswer").css("display", "none");
+    if (counter == questions.length-1) {
+        //終了
+        finished();
+    } else {
+        //次の問題へ
+        counter++;
+        num=numbers[counter];
+        $("#question").text(questions[num]);
+        answerwritten = "";
+    }
+    $("#answerbutton").css("display", "block");
+    $("#nextquestion").css("display", "none");
+})
+
+$("#reset").click(function() {
+    reset();
+    var myVar =setInterval(function(){//カウントダウン
+        var sec=$("#countdown").text();
+        sec--;
+        $("#countdown").text(sec);
+        if(sec==0){
+            //終了→集計になる
+            clearInterval(myVar);
+            $("#quiz").css("display", "none");
+            $("#finish").css("display", "block");
+        }
+    }, 1000);
+    numbers=Array.from(Array(questions.length).keys());
+    shuffle(numbers);
+    //console.log(numbers);
+    num=numbers[counter];
+    $("#question").text(questions[num]);
 })
 
 </script>
