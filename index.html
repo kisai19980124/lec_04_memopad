@@ -18,9 +18,10 @@
 <div class="content wrapper" id="quiz" style="display: none;">
     <div><span id="countdown">30</span>秒</div>
     <h2 class="page-title" id="question">問題</h2>
-    <p>この国の名前は？ひらがなで解答してください．</p>
+    <p>この国の名前は？ひらがなで解答してください．（Enterで解答できます）</p>
     <div id="answerarea" >
-        <textarea id="answer"></textarea>
+        
+        <input type="text" class="text1" id="answer">
         <a class="button" id="answerbutton" style="display: block;">解答</a>
         <a class="button" id="nextquestion" style="display: none;">次の問題</a>
     </div>
@@ -33,17 +34,19 @@
 </div>
 
 <div class="content wrapper" id="finish" style="display: none;">
-    <h2 class="page-title" id="question">終了！</h2>
+    
     <p>あなたの点数は…</p>
     <h2 class="page-title" id="final_point"></h2>
-    <h2 class="page-title" id="new_record"></h2>
+    <h2 class="page-title" id="new_record" style="display: none;">新記録です！</h2>
+    <p>過去最高スコア：</p>
+    <h2 class="page-title" id="old_record"></h2>
     <a class="button" id="reset">もう一回</a>
 </div>
 
 <script>
-var questions = ["亜米利加","英吉利","威爾斯","威士干心","阿海阿"];
-var pronunciation = ["あめりか","いぎりす","うぇーるず","うぃすこんしん","おはいお"]
-var answers=["アメリカ","イギリス","ウェールズ","ウィスコンシン","オハイオ"];
+var questions = ["亜米利加","英吉利","威爾斯","威士干心","阿海阿","喜別久","建徳基","干尼底吉","新南威爾斯","新蘇蘭","花満的","布哇","緑威","剣橋","君府"];
+var pronunciation = ["あめりか","いぎりす","うぇーるず","うぃすこんしん","おはいお","けべっく","けんたっきー","こねちかっと","にゅーさうすうぇーるず","のばすこしあ","ばーもんと","はわい","ぐりにっじ","けんぶりっじ","こんすたんてぃのーぷる"]
+var answers=["アメリカ","イギリス","ウェールズ","ウィスコンシン","オハイオ","ケベック","ケンタッキー","コネチカット","ニューサウスウェールズ","ノバスコシア","バーモント","ハワイ","グリニッジ","ケンブリッジ","コンスタンティノープル"];
 var numbers=[];
 var counter=0;
 var num = 0;
@@ -55,9 +58,16 @@ function shuffle(array) {
 
 function finished(){
     clearInterval(timer);
+    let highscore=localStorage.getItem("highscore");
+    $("#old_record").text(highscore);
     $("#quiz").css("display", "none");
     $("#finish").css("display", "block");
+    console.log(score);
     $("#final_point").text(score);
+    if (score > highscore) {
+        $("#new_record").css("display","block");
+        localStorage.setItem('highscore', score);
+    }
 }
 function reset(){
     $("#countdown").text(30);
@@ -65,6 +75,9 @@ function reset(){
     $("#finish").css("display", "none");
     $("#correct").css("display", "none");
     $("#false").css("display", "none");
+    $("#new_record").css("display","none");
+    let answerwritten = document.getElementById("answer");
+    answerwritten.value = "";
     //clearInterval(timer);
     numbers=[];
     counter=0;
@@ -76,7 +89,7 @@ var countdown = function () {
     var sec=$("#countdown").text();
         sec--;
         $("#countdown").text(sec);
-        if(sec==0){
+        if(sec<=0){
             //終了→集計になる
             
             finished();
@@ -143,25 +156,16 @@ $("#nextquestion").click(function(){
         counter++;
         num=numbers[counter];
         $("#question").text(questions[num]);
-        answerwritten = "";
+        
     }
+    answerwritten.value = "";
     $("#answerbutton").css("display", "block");
     $("#nextquestion").css("display", "none");
 })
 
 $("#reset").click(function() {
     reset();
-    var myVar =setInterval(function(){//カウントダウン
-        var sec=$("#countdown").text();
-        sec--;
-        $("#countdown").text(sec);
-        if(sec==0){
-            //終了→集計になる
-            clearInterval(myVar);
-            $("#quiz").css("display", "none");
-            $("#finish").css("display", "block");
-        }
-    }, 1000);
+    timer = setInterval(countdown,1000);
     numbers=Array.from(Array(questions.length).keys());
     shuffle(numbers);
     //console.log(numbers);
@@ -169,6 +173,22 @@ $("#reset").click(function() {
     $("#question").text(questions[num]);
 })
 
+$("#answer").keyup(function (event) {
+    if (event.which === 13) {
+        event.preventDefault();
+        let answerwritten = document.getElementById("answer");
+        if (answerwritten.value ){ //値が入ってる場合のみ
+            if ($("#answerbutton").css("display") == "block") {
+                $("#answerbutton").click();
+            } else if($("#nextquestion").css("display") == "block") {
+                $("#nextquestion").click();
+        } 
+        }
+        
+        
+        
+    }
+})
 </script>
 </body>
 </html>

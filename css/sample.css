@@ -36,6 +36,7 @@ img{
     font-size: 1.375rem;
     background: #0bd;
     color: #fff;
+    
     border-radius: 5px;
     padding: 18px 32px;
     cursor: pointer;
@@ -88,24 +89,24 @@ li:hover{
     background: #0d7dfd;
     color:#fff;
 }
-textarea{
+.text1{
+    margin: 5px;
   padding: 5px 10px;
   border: 2px #ccc solid;
   width: 50%;
   font-size:80%;
   border-radius: 3px;
   background-color:transparent;
-  overflow: auto;
-  resize: none;
+
   
 }
 
-textarea:hover{
+.text1:hover{
     border: 2px #666 solid;
     background-color: #ffffdd;
 }
 
-textarea:focus{
+.text1:focus{
     border: 2px #009900 solid;
     background-color: #ffff99;
 }
